@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">New Pokedex</string>
+    <string name="pokemon_type_water">Água</string>
+    <string name="pokemon_type_grass">Grama</string>
+    <string name="pokemon_type_dragon">Dragão</string>
+    <string name="pokemon_type_electric">Elétrico</string>
+    <string name="pokemon_type_fairy">Fada</string>
+    <string name="pokemon_type_ghost">Fantasma</string>
+    <string name="pokemon_type_fire">Fogo</string>
+    <string name="pokemon_type_ice">Gelo</string>
+    <string name="pokemon_type_bug">Inseto</string>
+    <string name="pokemon_type_fighting">Lutador</string>
+    <string name="pokemon_type_normal">Normal</string>
+    <string name="pokemon_type_dark">Sombrio</string>
+    <string name="pokemon_type_steel">Aço</string>
+    <string name="pokemon_type_rock">Pedra</string>
+    <string name="pokemon_type_psychic">Psíquico</string>
+    <string name="pokemon_type_ground">Terra</string>
+    <string name="pokemon_type_poison">Venenoso</string>
+    <string name="pokemon_type_flying">Voador</string>
+    <string name="content_description_icon_add_favorite">Adionar favorito</string>
+    <string name="content_description_icon_remove_favorite">Remover favorito</string>
+    <string name="content_description_icon_back">Voltar</string>
+
+    <string name="pokemon_feature_label_weight">Peso</string>
+    <string name="pokemon_feature_label_generation">Geração</string>
+    <string name="pokemon_feature_label_height">Altura</string>
+    <string name="pokemon_feature_label_ability">Habilidade</string>
+    <string name="pokemon_details_label_weakness">Fraquezas</string>
+    <string name="pokemon_details_label_evolutions">Evoluções</string>
+    <string name="default_error_message">Ops…\nAlgo deu errado, tente novamente mais tarde</string>
+    <string name="button_try_again">Tentar novamente</string>
+
+</resources>
