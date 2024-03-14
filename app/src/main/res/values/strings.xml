@@ -27,6 +27,7 @@
     <string name="pokemon_feature_label_height">Altura</string>
     <string name="pokemon_feature_label_ability">Habilidade</string>
     <string name="pokemon_details_label_weakness">Fraquezas</string>
+    <string name="pokemon_details_label_stats">Estatísticas</string>
     <string name="pokemon_details_label_evolutions">Evoluções</string>
     <string name="default_error_message">Ops…\nAlgo deu errado, tente novamente mais tarde</string>
     <string name="button_try_again">Tentar novamente</string>

@@ -53,7 +53,7 @@ private fun PokemonStatsView(
 
     Column(modifier = modifier) {
         PokemonName(
-            text = stringResource(R.string.pokemon_details_label_weakness),
+            text = stringResource(R.string.pokemon_details_label_stats),
             fontSize = TextLabelLarge,
         )
         Spacer(modifier = Modifier.size(size = PaddingTwo))

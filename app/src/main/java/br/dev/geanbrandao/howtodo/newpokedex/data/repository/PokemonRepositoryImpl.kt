@@ -13,7 +13,7 @@ import io.ktor.client.request.url
 import org.koin.core.annotation.Single
 
 private const val BASE_URL: String = "https://pokeapi.co/api/v2"
-private const val POKE_LIST: String = "$BASE_URL/pokemon/?offset=%d&limit=20"
+private const val POKE_LIST: String = "$BASE_URL/pokemon/?offset=%d&limit=50"
 private const val POKE_SPECIE: String = "$BASE_URL/pokemon-species/"
 private const val POKE_INFO: String = "$BASE_URL/pokemon/"
 
