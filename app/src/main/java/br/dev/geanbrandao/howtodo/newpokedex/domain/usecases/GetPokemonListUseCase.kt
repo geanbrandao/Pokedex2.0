@@ -3,7 +3,7 @@ package br.dev.geanbrandao.howtodo.newpokedex.domain.usecases
 import br.dev.geanbrandao.howtodo.newpokedex.common.decimetresToMeters
 import br.dev.geanbrandao.howtodo.newpokedex.common.getTypeModel
 import br.dev.geanbrandao.howtodo.newpokedex.common.toFormattedString
-import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonResponse
+import br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models.PokemonResponse
 import br.dev.geanbrandao.howtodo.newpokedex.domain.repository.PokemonRepository
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
 import kotlinx.coroutines.flow.flow

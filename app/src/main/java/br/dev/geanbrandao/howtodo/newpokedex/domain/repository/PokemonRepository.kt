@@ -1,9 +1,9 @@
 package br.dev.geanbrandao.howtodo.newpokedex.domain.repository
 
-import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonEvolutionResponse
-import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonListResponse
-import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonResponse
-import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonSpecieResponse
+import br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models.PokemonEvolutionResponse
+import br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models.PokemonListResponse
+import br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models.PokemonResponse
+import br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models.PokemonSpecieResponse
 
 interface PokemonRepository {
     suspend fun getPokemonList(currentPage: Int) : PokemonListResponse

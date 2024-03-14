@@ -1,4 +1,4 @@
-package br.dev.geanbrandao.howtodo.newpokedex.data.remote.models
+package br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -13,7 +13,7 @@ data class PokemonResponse(
     @SerialName("abilities") val abilities: List<Ability>,
     @SerialName("stats") val stats: List<Stats>,
 
-) {
+    ) {
     @Serializable
     data class Type(
         @SerialName("slot") val slot: Int,

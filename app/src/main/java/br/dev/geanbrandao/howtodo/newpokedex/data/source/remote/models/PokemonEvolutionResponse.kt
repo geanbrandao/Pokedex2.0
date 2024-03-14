@@ -1,4 +1,4 @@
-package br.dev.geanbrandao.howtodo.newpokedex.data.remote.models
+package br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

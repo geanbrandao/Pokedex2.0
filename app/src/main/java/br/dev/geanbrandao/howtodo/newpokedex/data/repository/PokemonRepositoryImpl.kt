@@ -1,9 +1,9 @@
 package br.dev.geanbrandao.howtodo.newpokedex.data.repository
 
-import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonEvolutionResponse
-import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonListResponse
-import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonResponse
-import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonSpecieResponse
+import br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models.PokemonEvolutionResponse
+import br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models.PokemonListResponse
+import br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models.PokemonResponse
+import br.dev.geanbrandao.howtodo.newpokedex.data.source.remote.models.PokemonSpecieResponse
 import br.dev.geanbrandao.howtodo.newpokedex.domain.repository.PokemonRepository
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.HomeUiState.Companion.PAGE_SIZE
 import io.ktor.client.HttpClient
