@@ -1,6 +1,7 @@
 # Pokedex Android Project
 
-![Lista de Pokemon](/docs/home.jpeg) ![Detalhes do Pokemon](docs/details.jpeg)
+| ![Lista de Pokemon](/docs/home.jpeg) | ![Detalhes do Pokemon](docs/details.jpeg) |
+|:-----------------------------------------:|:--------------------------------------------:|
 
 This is an Android project that consists of a Pokedex, an application that allows viewing information about different Pokemon. The project is developed using the MVVM architecture with Clean Architecture, and employs various modern technologies for its implementation.
 

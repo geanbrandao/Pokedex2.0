@@ -3,7 +3,8 @@
 
 ### [English Version](README-us.md)
 
-![Lista de Pokemon](/docs/home.jpeg) ![Detalhes do Pokemon](docs/details.jpeg)
+| ![Lista de Pokemon](/docs/home.jpeg) | ![Detalhes do Pokemon](docs/details.jpeg) |
+|:-----------------------------------------:|:--------------------------------------------:|
 
 Este é um projeto Android que consiste em uma Pokedex, uma aplicação que permite visualizar informações sobre diferentes pokemon. O projeto é desenvolvido utilizando a arquitetura MVVM com Clean Architecture, e emprega diversas tecnologias modernas para sua implementação.
 
