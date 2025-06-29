@@ -1,23 +1,23 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
-    id("com.google.devtools.ksp")
-    kotlin("plugin.serialization") version "1.9.0"
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.compose)
 
 }
 
 android {
     namespace = "br.dev.geanbrandao.howtodo.newpokedex"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "br.dev.geanbrandao.howtodo.newpokedex"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 2
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -25,13 +25,13 @@ android {
         }
     }
 
-    applicationVariants.forEach { variant ->
-        kotlin.sourceSets {
-            getByName(name) {
-                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
-            }
-        }
-    }
+//    applicationVariants.forEach { variant ->
+//        kotlin.sourceSets {
+//            getByName(name) {
+//                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+//            }
+//        }
+//    }
 
     buildTypes {
         release {
@@ -89,6 +89,7 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.content.negotiation)
 
+    // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.annotations)
