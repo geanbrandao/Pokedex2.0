@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.dev.geanbrandao.howtodo.newpokedex.domain.usecases.PokemonUseCases
+import br.dev.geanbrandao.howtodo.newpokedex.navigation.AppNavigator
+import br.dev.geanbrandao.howtodo.newpokedex.navigation.Details
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.HomeUiState.Companion.PAGE_SIZE
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +19,7 @@ private const val KEY_UI_STATE = "keyUiHomeState"
 class HomeViewModel(
     private val state: SavedStateHandle,
     private val useCases: PokemonUseCases,
+    private val appNavigator: AppNavigator,
 ) : ViewModel() {
 
     val uiState: StateFlow<HomeUiState> = state.getStateFlow(KEY_UI_STATE, HomeUiState())
@@ -46,5 +49,9 @@ class HomeViewModel(
     fun onTryAgain() {
         state[KEY_UI_STATE] = uiState.value.copy(error = null)
         getPokemonList()
+    }
+
+    fun openDetails(pokemon: PokemonModel) = viewModelScope.launch {
+        appNavigator.navigateTo(Details(pokemon))
     }
 }

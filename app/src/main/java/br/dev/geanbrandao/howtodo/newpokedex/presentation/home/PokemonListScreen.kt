@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import br.dev.geanbrandao.howtodo.newpokedex.common.clickableNoRippleEffect
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.ErrorScreen
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.destinations.PokemonDetailsScreenDestination
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.PokemonCardView
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.PokemonShimmerItem
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonDetailsModel
@@ -22,17 +21,13 @@ import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeModel
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingOne
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingTwo
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
-@RootNavGraph(start = true)
-@Destination
+//@RootNavGraph(start = true)
+//@Destination
 @Composable
 fun PokemonListScreen(
     viewModel: HomeViewModel = koinViewModel(),
-    navigator: DestinationsNavigator,
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val pokemonList = uiState.value.pokemonList
@@ -49,7 +44,7 @@ fun PokemonListScreen(
         pokemonList = pokemonList,
         isLoading = isLoading,
         navigateToDetails = { item: PokemonModel ->
-            navigator.navigate(PokemonDetailsScreenDestination(pokemon = item))
+            viewModel.openDetails(pokemon = item)
         },
     )
 }

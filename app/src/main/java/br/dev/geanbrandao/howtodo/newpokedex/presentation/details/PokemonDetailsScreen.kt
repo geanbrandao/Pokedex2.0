@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -19,30 +20,37 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.ErrorScreen
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.details.components.HeaderView
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.details.components.PokemonDetailsInfo
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.details.components.TopHeaderView
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.Bulbasaur
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonDetailsModel
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingTwo
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
-
-@Destination(
-    navArgsDelegate = PokemonDetailsScreenNavArgs::class
-)
 @Composable
 fun PokemonDetailsScreen(
-    navigator: DestinationsNavigator,
     viewModel: DetailsViewModel = koinViewModel(),
+    pokemon: PokemonModel,
 ) {
     val uiState = viewModel.uiState.collectAsState()
     if (uiState.value.screenUiState.error != null) {
         ErrorScreen {
-            viewModel.getPokemonDetails()
+            viewModel.getPokemonDetails(pokemon)
+        }
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(key1 = lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.getPokemonDetails(pokemon)
         }
     }
 
@@ -50,7 +58,7 @@ fun PokemonDetailsScreen(
         PokemonDetailsView(
             item = it,
             onBackPressed = {
-                navigator.popBackStack()
+                viewModel.navigateBack()
             }
         )
     }
@@ -64,7 +72,8 @@ private fun PokemonDetailsView(
     val scrollState = rememberScrollState()
     val isScrollingUp = scrollState.rememberIsScrollingDown()
     val topHeaderColor = animateColorAsState(
-        targetValue = if (isScrollingUp) item.pokemon.typeOne.color else Color.Unspecified,
+//        targetValue = if (isScrollingUp) item.pokemon.typeOne.color else Color.Unspecified,
+        targetValue =  Color(item.pokemon.typeOne.color),
         label = "Top header color",
         animationSpec = tween(700),
     )

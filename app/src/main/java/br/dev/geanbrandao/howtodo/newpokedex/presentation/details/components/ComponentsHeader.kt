@@ -30,6 +30,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import br.dev.geanbrandao.howtodo.newpokedex.R
 import br.dev.geanbrandao.howtodo.newpokedex.common.clickableNoRippleEffect
 import br.dev.geanbrandao.howtodo.newpokedex.common.gradient45
+import br.dev.geanbrandao.howtodo.newpokedex.common.toColor
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.Bulbasaur
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.Rayquaza
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.debugPlaceholder
@@ -61,7 +62,7 @@ private fun Header(
         Box(
             modifier = Modifier
                 .size(500.dp)
-                .background(shape = CircleShape, color = pokemon.typeOne.color)
+                .background(shape = CircleShape, color = pokemon.typeOne.color.toColor())
                 .constrainAs(circleRef) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -78,7 +79,7 @@ private fun Header(
                     onDrawWithContent {
                         drawContent()
                         drawRect(
-                            brush = pokemon.typeOne.color.gradient45,
+                            brush = pokemon.typeOne.color.toColor().gradient45,
                             blendMode = BlendMode.SrcAtop
                         )
                     }

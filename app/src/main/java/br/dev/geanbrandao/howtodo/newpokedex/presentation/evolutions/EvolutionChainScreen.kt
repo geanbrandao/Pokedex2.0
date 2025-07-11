@@ -30,6 +30,7 @@ import androidx.constraintlayout.compose.Dimension
 import br.dev.geanbrandao.howtodo.newpokedex.R
 import br.dev.geanbrandao.howtodo.newpokedex.common.gradient45
 import br.dev.geanbrandao.howtodo.newpokedex.common.shimmerEffect
+import br.dev.geanbrandao.howtodo.newpokedex.common.toColor
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.PokemonName
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.TextLabel
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.PokemonTypeSmallView
@@ -141,7 +142,7 @@ private fun PokemonImageView(
 ) {
     ConstraintLayout(
         modifier = Modifier
-            .background(color = pokemon.typeOne.color, RoundedCornerShape(75.dp))
+            .background(color = pokemon.typeOne.color.toColor(), RoundedCornerShape(75.dp))
             .padding(all = PaddingOne)
             .size(width = 100.dp, 75.dp)
     ) {
@@ -155,7 +156,7 @@ private fun PokemonImageView(
                     onDrawWithContent {
                         drawContent()
                         drawRect(
-                            brush = pokemon.typeOne.color.gradient45,
+                            brush = pokemon.typeOne.color.toColor().gradient45,
                             blendMode = BlendMode.SrcAtop
                         )
                     }

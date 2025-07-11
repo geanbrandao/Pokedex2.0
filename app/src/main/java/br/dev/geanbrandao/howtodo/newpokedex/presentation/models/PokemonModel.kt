@@ -4,9 +4,11 @@ import android.os.Parcelable
 import androidx.compose.runtime.Stable
 import br.dev.geanbrandao.howtodo.newpokedex.common.Utils
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 
 @Stable
+@Serializable
 @Parcelize
 data class PokemonModel(
     val id: Int,
@@ -23,6 +25,7 @@ data class PokemonModel(
     val imgUrlShiny: String get() = Utils.getImgOfficialShiny(id)
 
     @Parcelize
+    @Serializable
     data class Stat(
         val name: String,
         val value: Int,

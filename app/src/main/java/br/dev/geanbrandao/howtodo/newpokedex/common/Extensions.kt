@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.fromColorLong
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -155,3 +156,5 @@ fun String.getTypeModel(): PokemonTypeModel? {
 fun Int.decimetresToMeters() = (this.toFloat() / 10)
 
 fun String.getDigits() = this.filter { it.isDigit() }
+
+fun Long.toColor() = Color.fromColorLong(this)

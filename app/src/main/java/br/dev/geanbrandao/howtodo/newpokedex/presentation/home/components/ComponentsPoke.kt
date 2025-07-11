@@ -27,6 +27,7 @@ import androidx.constraintlayout.compose.Dimension
 import br.dev.geanbrandao.howtodo.newpokedex.R
 import br.dev.geanbrandao.howtodo.newpokedex.common.clickableNoRippleEffect
 import br.dev.geanbrandao.howtodo.newpokedex.common.gradient45
+import br.dev.geanbrandao.howtodo.newpokedex.common.toColor
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeModel
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingOne
 import coil.compose.AsyncImage
@@ -63,7 +64,7 @@ private fun Poke(
 
     Column(
         modifier = modifier
-            .background(color = type.color, RoundedCornerShape(percent = 15))
+            .background(color = type.color.toColor(), RoundedCornerShape(percent = 15))
             .padding(all = PaddingOne)
             .size(size = 100.dp),
     ) {
@@ -80,7 +81,7 @@ private fun Poke(
                     .drawWithCache {
                         onDrawWithContent {
                             drawContent()
-                            drawRect(brush = type.color.gradient45, blendMode = BlendMode.SrcAtop)
+                            drawRect(brush = type.color.toColor().gradient45, blendMode = BlendMode.SrcAtop)
                         }
                     }
                     .constrainAs(bgRef) {

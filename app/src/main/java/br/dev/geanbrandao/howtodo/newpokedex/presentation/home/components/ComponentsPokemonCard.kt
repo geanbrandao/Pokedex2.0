@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import br.dev.geanbrandao.howtodo.newpokedex.common.toColor
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.Bulbasaur
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingTwo
@@ -33,7 +34,7 @@ private fun PokemonCard(
     Row(
         modifier = modifier
             .background(
-                color = item.typeOne.color.copy(alpha = 0.15f),
+                color = item.typeOne.color.toColor().copy(alpha = 0.15f),
                 shape = RoundedCornerShape(percent = 15)
             )
             .padding(start = PaddingTwo),

@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import br.dev.geanbrandao.howtodo.newpokedex.common.toColor
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.PokemonTypeName
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeModel
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.IconTypeLargeSize
@@ -64,7 +65,7 @@ private fun PokemonType(
 ) {
     Row(
         modifier = modifier
-            .background(color = type.color, shape = RoundedCornerShape(48))
+            .background(color = type.color.toColor(), shape = RoundedCornerShape(48))
             .padding(vertical = PaddingHalf, horizontal = PaddingOne),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
@@ -74,7 +75,7 @@ private fun PokemonType(
         ) {
             Icon(
                 painter = painterResource(id = type.icon),
-                tint = type.color,
+                tint = type.color.toColor(),
                 contentDescription = "grass icon",
                 modifier = Modifier
                     .align(Alignment.Center)
