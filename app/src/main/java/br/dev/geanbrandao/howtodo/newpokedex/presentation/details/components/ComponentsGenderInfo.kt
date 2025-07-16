@@ -10,55 +10,49 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import br.dev.geanbrandao.howtodo.newpokedex.R
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.TextLabel
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.AppTheme
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.FemaleColor
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.MaleColor
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingHalf
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingOne
-import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.TextLabelSmall
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingTwo
 
 @Composable
 fun GenderInfo(
     genderRate: Int,
     modifier: Modifier = Modifier,
 ) {
-    GenderInfoView(
-        genderRate = genderRate,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun GenderInfoView(
-    modifier: Modifier = Modifier,
-    genderRate: Int = 1,
-) {
     val (maleProbability, femaleProbability) = calculateGenderProbability(genderRate)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
     ) {
-        TextLabel(
-            text = "GÊNERO",
-            fontSize = TextLabelSmall,
+        Text(
+            text = stringResource(R.string.pokemon_gender_info_label),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.size(PaddingOne))
         LinearProgressIndicator(
-            progress = maleProbability / 100f,
+            progress = { maleProbability / 100f },
             color = MaleColor,
             trackColor = FemaleColor,
             strokeCap = StrokeCap.Round,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(PaddingOne)
+                .height(PaddingTwo)
         )
         Spacer(modifier = Modifier.size(PaddingHalf))
         Row(
@@ -80,16 +74,28 @@ private fun TextGenderPercentView(
         Icon(
             painter = painterResource(id = genderIconId),
             contentDescription = null,
-            tint = Color.Unspecified
+            tint = MaterialTheme.colorScheme.onBackground,
         )
-        TextLabel(text = "$percent%", fontSize = TextLabelSmall)
+        Text(
+            text = "$percent%",
+            style = MaterialTheme.typography.labelLarge,
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GenderInfoPreview() {
-    GenderInfoView()
+fun GenderInfoPreview(
+    @PreviewParameter(GenderInfoPreviewProvider::class) genderRate: Int,
+) {
+    AppTheme {
+        GenderInfo(genderRate)
+    }
+}
+
+class GenderInfoPreviewProvider : PreviewParameterProvider<Int> {
+    override val values: Sequence<Int>
+        get() = sequenceOf(1, 2, 3, 6)
 }
 
 fun calculateGenderProbability(genderRate: Int): Pair<Float, Float> {

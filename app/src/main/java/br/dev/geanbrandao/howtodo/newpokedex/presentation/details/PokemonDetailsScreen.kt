@@ -19,42 +19,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PokemonDetailsPreviewProvider
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.ErrorScreen
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.details.components.HeaderView
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.details.components.PokemonDetailsInfo
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.details.components.TopHeaderView
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.Bulbasaur
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonDetailsModel
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonV2Details
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.AppTheme
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingTwo
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PokemonDetailsScreen(
     viewModel: DetailsViewModel = koinViewModel(),
-    pokemon: PokemonModel,
+    pokemonId: Int,
 ) {
     val uiState = viewModel.uiState.collectAsState()
-    if (uiState.value.screenUiState.error != null) {
+    if (uiState.value.error != null) {
         ErrorScreen {
-            viewModel.getPokemonDetails(pokemon)
+            viewModel.getPokemonDetails(pokemonId)
         }
     }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(key1 = lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.getPokemonDetails(pokemon)
+            viewModel.getPokemonDetails(pokemonId)
         }
     }
 
-    uiState.value.pokemonDetails?.let {
+    uiState.value.pokemon?.let {
         PokemonDetailsView(
             item = it,
             onBackPressed = {
@@ -66,8 +65,8 @@ fun PokemonDetailsScreen(
 
 @Composable
 private fun PokemonDetailsView(
-    item: PokemonDetailsModel = Bulbasaur,
-    onBackPressed: () -> Unit = {},
+    item: PokemonV2Details,
+    onBackPressed: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val isScrollingUp = scrollState.rememberIsScrollingDown()
@@ -126,6 +125,10 @@ private fun ScrollState.rememberIsScrollingDown(): Boolean {
 
 @Preview(showBackground = true)
 @Composable
-private fun PokemonDetailsPreview() {
-    PokemonDetailsView()
+private fun PokemonDetailsPreview(
+    @PreviewParameter(PokemonDetailsPreviewProvider::class) item: PokemonV2Details,
+) {
+    AppTheme {
+        PokemonDetailsView(item = item, onBackPressed = {})
+    }
 }

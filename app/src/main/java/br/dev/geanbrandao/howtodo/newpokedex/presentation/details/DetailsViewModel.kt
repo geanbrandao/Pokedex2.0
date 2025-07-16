@@ -3,11 +3,12 @@ package br.dev.geanbrandao.howtodo.newpokedex.presentation.details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.dev.geanbrandao.howtodo.newpokedex.domain.usecases.PokemonUseCases
+import br.dev.geanbrandao.howtodo.newpokedex.domain.repository.PokemonV2Repository
 import br.dev.geanbrandao.howtodo.newpokedex.navigation.AppNavigator
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.details.DetailsUiState.Companion.update
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonV2Details
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
@@ -16,26 +17,24 @@ private const val KEY_UI_STATE = "keyUiDetailsState"
 @KoinViewModel
 class DetailsViewModel(
     private val state: SavedStateHandle,
-    private val useCases: PokemonUseCases,
     private val appNavigator: AppNavigator,
+    private val repository: PokemonV2Repository,
 ) : ViewModel() {
-
-//    private val navArgs: PokemonDetailsScreenNavArgs = state.navArgs()
 
     val uiState: StateFlow<DetailsUiState> = state.getStateFlow(KEY_UI_STATE, DetailsUiState())
 
-    fun getPokemonDetails(pokemon: PokemonModel) {
-        viewModelScope.launch {
-            state[KEY_UI_STATE] = uiState.value.update(isLoading = true)
-            try {
-                val result = useCases.getPokemonDetailsUseCase(pokemon)
-                state[KEY_UI_STATE] = uiState.value.update(pokemonDetails = result)
-            } catch (e: Exception) {
-                state[KEY_UI_STATE] = uiState.value.update(error = e)
-            } finally {
-                state[KEY_UI_STATE] = uiState.value.update(isLoading = false)
+    fun getPokemonDetails(id: Int) = viewModelScope.launch {
+        repository.getPokemonDetailsById(id)
+            .onStart {
+                state[KEY_UI_STATE] = uiState.value.copy(isLoading = true)
             }
-        }
+            .catch {
+                it.printStackTrace()
+                state[KEY_UI_STATE] = uiState.value.copy(error = it, isLoading = false)
+            }
+            .collect { pokemon: PokemonV2Details ->
+                state[KEY_UI_STATE] = uiState.value.copy(pokemon = pokemon, )
+            }
     }
 
     fun navigateBack() = viewModelScope.launch {

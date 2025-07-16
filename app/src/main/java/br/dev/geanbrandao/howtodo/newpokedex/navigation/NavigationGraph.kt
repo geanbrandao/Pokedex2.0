@@ -10,7 +10,7 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.details.PokemonDetailsScreen
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.PokemonListScreen
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.PokemonListScreenV2
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -37,13 +37,14 @@ fun NavigationGraph(
             entry<Home>(
                 metadata = TwoPaneScene.twoPane(),
                 content = {
-                    PokemonListScreen()
+//                    PokemonListScreen()
+                    PokemonListScreenV2()
                 }
             )
             entry<Details>(
                 metadata = TwoPaneScene.twoPane(),
                 content = {
-                    PokemonDetailsScreen(pokemon = it.item)
+                    PokemonDetailsScreen(pokemonId = it.id)
                 }
             )
         }

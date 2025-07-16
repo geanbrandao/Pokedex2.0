@@ -18,7 +18,8 @@ enum class PokemonTypeEnum(val identifier: String) {
     PSYCHIC("psychic"),
     GROUND("ground"),
     POISON("poison"),
-    FLYING("flying");
+    FLYING("flying"),
+    UNKNOWN("unknown");
 
     companion object {
         fun from(identifier: String) = entries.find { it.identifier == identifier }

@@ -95,11 +95,12 @@ private fun Poke(
             )
             AsyncImage(
                 model = pokeUrl,
-                placeholder = debugPlaceholder(R.drawable.bulbasaur_1),
+                placeholder = debugPlaceholder(R.drawable.il_error),
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .size(70.dp)
+//                    .size(70.dp)
+                    .padding(all = 8.dp)
                     .constrainAs(imgRef) {
 //                        width = Dimension.fillToConstraints
 //                        height = Dimension.fillToConstraints

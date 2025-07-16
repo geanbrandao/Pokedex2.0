@@ -25,16 +25,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.dev.geanbrandao.howtodo.newpokedex.R
 import br.dev.geanbrandao.howtodo.newpokedex.common.clickableNoRippleEffect
 import br.dev.geanbrandao.howtodo.newpokedex.common.gradient45
+import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PokemonDetailsPreviewProvider
 import br.dev.geanbrandao.howtodo.newpokedex.common.toColor
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.Bulbasaur
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.Rayquaza
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.debugPlaceholder
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonV2
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.DetailsPokeSize
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.DragonColor
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingOne
@@ -45,14 +45,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HeaderView(
-    pokemon: PokemonModel
+    pokemon: PokemonV2
 ) {
     Header(pokemon = pokemon)
 }
 
 @Composable
 private fun Header(
-    pokemon: PokemonModel = Rayquaza.pokemon,
+    pokemon: PokemonV2,
 ) {
     ConstraintLayout(
         modifier = Modifier.fillMaxWidth()
@@ -152,7 +152,7 @@ fun TopHeaderView(
 @Composable
 private fun PokemonSprite(
     modifier: Modifier = Modifier,
-    pokemon: PokemonModel = Bulbasaur.pokemon,
+    pokemon: PokemonV2,
 ) {
 
     val currentImgUrl = remember {
@@ -163,7 +163,7 @@ private fun PokemonSprite(
 
     AsyncImage(
         model = currentImgUrl.value,
-        placeholder = debugPlaceholder(R.drawable.bulbasaur_1),
+        placeholder = debugPlaceholder(R.drawable.il_error),
         contentDescription = null,
         contentScale = ContentScale.Fit,
         modifier = modifier
@@ -184,8 +184,10 @@ private fun PokemonSprite(
 
 @Preview(showBackground = true)
 @Composable
-private fun HeaderPreview() {
-    Header()
+private fun HeaderPreview(
+    @PreviewParameter(PokemonDetailsPreviewProvider::class) item: PokemonV2
+) {
+    Header(pokemon = item)
 }
 
 @Preview

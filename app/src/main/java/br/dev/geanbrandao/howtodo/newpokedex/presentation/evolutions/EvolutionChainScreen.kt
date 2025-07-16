@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,127 +28,156 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import br.dev.geanbrandao.howtodo.newpokedex.R
+import br.dev.geanbrandao.howtodo.newpokedex.common.capitalize
 import br.dev.geanbrandao.howtodo.newpokedex.common.gradient45
+import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PokemonPreviewProvider
+import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PreviewHelper
 import br.dev.geanbrandao.howtodo.newpokedex.common.shimmerEffect
 import br.dev.geanbrandao.howtodo.newpokedex.common.toColor
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.PokemonName
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.TextLabel
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.PokemonTypeSmallView
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.ErrorScreen
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.PokemonType
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.debugPlaceholder
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonEvolutionModel
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeModel
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonV2
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.AppTheme
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.Black
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.IconTypeSmallSize
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingHalf
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingOne
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingThree
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingTwo
-import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.TextBodyLarge
-import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.TextLabelLarge
-import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.TextLabelSmall
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun EvolutionChainScreen(
-    chainUrl: String,
     modifier: Modifier = Modifier,
     viewModel: EvolutionChainViewModel = koinViewModel(),
+    evolutions: List<Int>,
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.getEvolutionChain(chainUrl = chainUrl)
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(key1 = lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.getEvolutions(evolutions)
+        }
     }
 
     val uiState = viewModel.uiState.collectAsState()
-    val evolutions = uiState.value.evolutions
-    val isLoading = uiState.value.screenUiState.isLoading
 
     EvolutionChainView(
         modifier = modifier,
-        evolutions = evolutions,
-        isLoading = isLoading,
+        uiState = uiState.value,
+        onTryAgain = { viewModel.getEvolutions(evolutions) }
     )
 }
 
 @Composable
 private fun EvolutionChainView(
     modifier: Modifier = Modifier,
-    evolutions: List<PokemonEvolutionModel>,
-    isLoading: Boolean,
+    uiState: EvolutionChainUiState,
+    onTryAgain: () -> Unit = {},
 ) {
-    Column(
-        modifier = modifier,
-    ) {
-        PokemonName(
-            text = stringResource(R.string.pokemon_details_label_evolutions),
-            fontSize = TextLabelLarge,
+
+    if (uiState.error != null) {
+        ErrorScreen(
+            onTryAgain = onTryAgain
         )
-        Spacer(modifier = Modifier.size(size = PaddingTwo))
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shimmerEffect(RoundedCornerShape(size = 75.dp))
-                    .border(
-                        shape = RoundedCornerShape(size = 75.dp),
-                        width = 1.dp,
-                        color = Black.copy(alpha = 0.1f),
-                    )
-                    .height(100.dp),
+    } else {
+        Column(
+            modifier = modifier,
+        ) {
+            Text(
+                text = stringResource(R.string.pokemon_details_label_evolutions),
+                style = MaterialTheme.typography.titleLarge,
             )
-        } else {
-            evolutions.forEach { pokemonEvolution: PokemonEvolutionModel ->
-                EvolutionItem(pokemon = pokemonEvolution)
-                Spacer(modifier = Modifier.size(size = PaddingTwo))
+            Spacer(modifier = Modifier.size(size = PaddingTwo))
+            if (uiState.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shimmerEffect(RoundedCornerShape(size = 75.dp))
+                        .border(
+                            shape = RoundedCornerShape(size = 75.dp),
+                            width = 1.dp,
+                            color = Black.copy(alpha = 0.1f),
+                        )
+                        .height(100.dp),
+                )
+            } else {
+                uiState.evolutions.forEach { pokemon: PokemonV2 ->
+                    EvolutionItem(pokemon = pokemon)
+                    Spacer(modifier = Modifier.size(size = PaddingTwo))
+                }
             }
         }
+
     }
+
 }
 
 @Composable
 private fun EvolutionItem(
-    pokemon: PokemonEvolutionModel = Bulbasaur,
+    pokemon: PokemonV2,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                shape = RoundedCornerShape(size = 75.dp),
-                width = 1.dp,
-                color = Black.copy(alpha = 0.1f),
-            )
-            .padding(end = PaddingThree),
-        verticalAlignment = Alignment.CenterVertically,
+    Card(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        PokemonImageView(pokemon = pokemon)
-        Spacer(modifier = Modifier.size(size = PaddingTwo))
-        Column {
-            PokemonName(text = pokemon.name, fontSize = TextBodyLarge)
-            TextLabel(text = pokemon.numberName, fontSize = TextLabelSmall)
-            Spacer(modifier = Modifier.size(size = PaddingOne))
-            Row {
-                PokemonTypeSmallView(type = pokemon.typeOne)
-                pokemon.typeTwo?.let { type: PokemonTypeModel ->
-                    Spacer(modifier = Modifier.size(size = PaddingHalf))
-                    PokemonTypeSmallView(type = type)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = PaddingThree),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            PokemonImageView(pokemon = pokemon)
+            Spacer(modifier = Modifier.size(size = PaddingTwo))
+            Column {
+                Text(
+                    text = pokemon.name.capitalize(),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                Text(
+                    text = pokemon.numberFormatted,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.size(size = PaddingOne))
+                Row {
+                    PokemonType(
+                        type = pokemon.typeOne,
+                        iconSize = IconTypeSmallSize,
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                    pokemon.typeTwo?.let { type: PokemonTypeModel ->
+                        Spacer(modifier = Modifier.size(size = PaddingHalf))
+                        PokemonType(
+                            type = type,
+                            iconSize = IconTypeSmallSize,
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    }
                 }
             }
         }
+
     }
 }
 
 @Composable
-private fun PokemonImageView(
-    pokemon: PokemonEvolutionModel = Bulbasaur,
-) {
+private fun PokemonImageView(pokemon: PokemonV2) {
     ConstraintLayout(
         modifier = Modifier
-            .background(color = pokemon.typeOne.color.toColor(), RoundedCornerShape(75.dp))
+            .background(color = pokemon.typeOne.color.toColor(), CardDefaults.shape)
             .padding(all = PaddingOne)
-            .size(width = 100.dp, 75.dp)
+            .size(width = 100.dp, 80.dp)
     ) {
         val (bgRef, imgRef) = createRefs()
         Icon(
@@ -172,7 +205,7 @@ private fun PokemonImageView(
         )
         AsyncImage(
             model = pokemon.imgUrlNormal,
-            placeholder = debugPlaceholder(R.drawable.bulbasaur_1),
+            placeholder = debugPlaceholder(R.drawable.il_error),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier
@@ -187,49 +220,33 @@ private fun PokemonImageView(
     }
 }
 
+class EvolutionChainPreviewProvider : PreviewParameterProvider<EvolutionChainUiState> {
+    val uiState = EvolutionChainUiState()
+    override val values: Sequence<EvolutionChainUiState>
+        get() = sequenceOf(
+            uiState.copy(isLoading = true),
+            uiState.copy(evolutions = listOf(PreviewHelper.bulbasaur, PreviewHelper.ivysaur, PreviewHelper.venusaur)),
+            uiState.copy(error = Throwable())
+        )
+
+}
+
 @Preview(showBackground = true)
 @Composable
-private fun PokemonEvolutionsPreview() {
-    Column {
-        EvolutionChainView(
-            modifier = Modifier.fillMaxWidth(),
-            evolutions = listOf(Bulbasaur, Ivysaur, Venusaur),
-            isLoading = true,
-        )
-        EvolutionChainView(
-            modifier = Modifier.fillMaxWidth(),
-            evolutions = listOf(Bulbasaur, Ivysaur, Venusaur),
-            isLoading = false,
-        )
+private fun PokemonEvolutionsPreview(
+    @PreviewParameter(EvolutionChainPreviewProvider::class) uiState: EvolutionChainUiState,
+) {
+    AppTheme {
+        EvolutionChainView(uiState = uiState)
     }
 }
 
 @Preview
 @Composable
-private fun PokemonImagePreview() {
-    PokemonImageView()
+private fun PokemonImagePreview(
+    @PreviewParameter(PokemonPreviewProvider::class) pokemon: PokemonV2
+) {
+    AppTheme {
+        PokemonImageView(pokemon = pokemon)
+    }
 }
-
-val Bulbasaur = PokemonEvolutionModel(
-    numberName = "Nº001",
-    name = "bulbasaur",
-    id = 1,
-    typeOne = PokemonTypeModel.Grass,
-    typeTwo = PokemonTypeModel.Poison,
-)
-
-val Ivysaur = PokemonEvolutionModel(
-    numberName = "Nº002",
-    name = "ivysaur",
-    id = 2,
-    typeOne = PokemonTypeModel.Grass,
-    typeTwo = PokemonTypeModel.Poison,
-)
-
-val Venusaur = PokemonEvolutionModel(
-    numberName = "Nº003",
-    name = "venusaur",
-    id = 3,
-    typeOne = PokemonTypeModel.Grass,
-    typeTwo = PokemonTypeModel.Poison,
-)

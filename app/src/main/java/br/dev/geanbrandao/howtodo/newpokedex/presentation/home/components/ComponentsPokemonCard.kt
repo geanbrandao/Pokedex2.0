@@ -1,10 +1,8 @@
 package br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,24 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PokemonPreviewProvider
 import br.dev.geanbrandao.howtodo.newpokedex.common.toColor
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.Bulbasaur
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonV2
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.AppTheme
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingTwo
 
-
 @Composable
-fun PokemonCardView(
-    item: PokemonModel,
+fun PokemonCard(
+    item: PokemonV2,
     modifier: Modifier = Modifier,
-) {
-    PokemonCard(modifier = modifier, item = item)
-}
-
-@Composable
-private fun PokemonCard(
-    modifier: Modifier = Modifier,
-    item: PokemonModel = Bulbasaur.pokemon,
 ) {
     Row(
         modifier = modifier
@@ -40,7 +31,7 @@ private fun PokemonCard(
             .padding(start = PaddingTwo),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        InfoView(
+        PokemonBasicInfo(
             item = item,
             modifier = Modifier.padding(top = PaddingTwo, bottom = PaddingTwo)
         )
@@ -49,11 +40,12 @@ private fun PokemonCard(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun PokemonItemPreview() {
-    Column(Modifier.fillMaxWidth()) {
-        PokemonCard(Modifier.fillMaxWidth())
+fun PokemonItemPreview(
+    @PreviewParameter(PokemonPreviewProvider::class) item: PokemonV2,
+) {
+    AppTheme {
+        PokemonCard(item = item)
     }
 }

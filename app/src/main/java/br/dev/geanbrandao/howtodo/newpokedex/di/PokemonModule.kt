@@ -1,6 +1,10 @@
 package br.dev.geanbrandao.howtodo.newpokedex.di
 
+import android.content.Context
 import android.util.Log
+import androidx.room.Room
+import br.dev.geanbrandao.howtodo.newpokedex.data.local.AppDatabase
+import br.dev.geanbrandao.howtodo.newpokedex.data.local.DB_NAME
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.DefaultRequest
@@ -18,6 +22,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
+import java.util.concurrent.Executors
 
 
 @Module
@@ -25,12 +30,13 @@ import org.koin.core.annotation.Single
 class PokemonModule {
 
     @Single
-    fun provideKtorHttpClient() = HttpClient(Android) {
+    fun provideJson() = Json { ignoreUnknownKeys = true }
+
+    @Single
+    fun provideKtorHttpClient(json: Json) = HttpClient(Android) {
         expectSuccess = true
         install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-            })
+            json(json)
         }
 
         install(Logging) {
@@ -54,4 +60,19 @@ class PokemonModule {
 
         install(HttpCache)
     }
+
+    @Single
+    fun provideDatabase(appContext: Context) = Room.databaseBuilder(
+        context = appContext,
+        klass = AppDatabase::class.java,
+        name = DB_NAME
+    ).setQueryCallback(
+        queryCallback = { query, bindArgs ->
+            Log.d("DB_LOG", "Query: $query, Args: $bindArgs")
+        },
+        executor = Executors.newSingleThreadExecutor(),
+    ).build()
+
+    @Single
+    fun providePokemonDao(database: AppDatabase) = database.pokemonDao
 }

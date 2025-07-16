@@ -18,10 +18,12 @@
     <string name="pokemon_type_ground">Terra</string>
     <string name="pokemon_type_poison">Venenoso</string>
     <string name="pokemon_type_flying">Voador</string>
+    <string name="pokemon_type_unknown">Desconhecido</string>
     <string name="content_description_icon_add_favorite">Adionar favorito</string>
     <string name="content_description_icon_remove_favorite">Remover favorito</string>
     <string name="content_description_icon_back">Voltar</string>
 
+    <string name="pokemon_gender_info_label">Gênero</string>
     <string name="pokemon_feature_label_weight">Peso</string>
     <string name="pokemon_feature_label_generation">Geração</string>
     <string name="pokemon_feature_label_height">Altura</string>

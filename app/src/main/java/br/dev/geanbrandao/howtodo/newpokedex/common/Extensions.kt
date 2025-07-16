@@ -42,7 +42,9 @@ import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeMode
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeModel.Psychic
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeModel.Rock
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeModel.Steel
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeModel.Unknown
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonTypeModel.Water
+import java.util.Locale
 
 val Color.gradient45
     get() = Brush.linearGradient(
@@ -120,6 +122,7 @@ fun PokemonTypeModel.getPokemonTypeWeaknesses(): List<PokemonTypeModel> {
         is Dark -> listOf(Fighting, Bug, Fairy)
         is Steel -> listOf(Fire, Fighting, Ground)
         is Fairy -> listOf(Poison, Steel)
+        is Unknown -> listOf()
     }
 }
 
@@ -128,8 +131,37 @@ fun Int.toFormattedString(): String {
     return "Nº$formattedNumber"
 }
 
+fun Int.toNumberName(): String {
+    val formattedNumber = this.toString().padStart(3, '0')
+    return "Nº$formattedNumber"
+}
 
-fun String.getTypeModel(): PokemonTypeModel? {
+fun Float.toHeightName(): String = buildString {
+    append(this@toHeightName)
+    append(" m")
+}
+
+fun Float.toWeightName(): String = buildString {
+    append(this@toWeightName)
+    append(" kg")
+}
+
+fun Int.toPokemonGenerationName(): String =
+    when (this) {
+        in 1..151 -> "I"       // Gen 1: Bulbasaur - Mew
+        in 152..251 -> "II"    // Gen 2: Chikorita - Celebi
+        in 252..386 -> "III"   // Gen 3: Treecko - Deoxys
+        in 387..493 -> "IV"    // Gen 4: Turtwig - Arceus
+        in 494..649 -> "V"     // Gen 5: Victini - Genesect
+        in 650..721 -> "VI"    // Gen 6: Chespin - Volcanion
+        in 722..809 -> "VII"   // Gen 7: Rowlet - Melmetal
+        in 810..905 -> "VIII"  // Gen 8: Grookey - Enamorus
+        in 906..1017 -> "IX"   // Gen 9: Sprigatito - Terapagos (as of 2024)
+        else -> "?"            // Out of current known range
+    }
+
+
+fun String.getTypeModel(): PokemonTypeModel {
     return when (PokemonTypeEnum.from(this)) {
         PokemonTypeEnum.WATER -> Water
         PokemonTypeEnum.GRASS -> Grass
@@ -149,7 +181,7 @@ fun String.getTypeModel(): PokemonTypeModel? {
         PokemonTypeEnum.GROUND -> Ground
         PokemonTypeEnum.POISON -> Poison
         PokemonTypeEnum.FLYING -> Flying
-        else -> null
+        else -> Unknown
     }
 }
 
@@ -158,3 +190,11 @@ fun Int.decimetresToMeters() = (this.toFloat() / 10)
 fun String.getDigits() = this.filter { it.isDigit() }
 
 fun Long.toColor() = Color.fromColorLong(this)
+
+fun String.capitalize() = this.replaceFirstChar {
+    if (it.isLowerCase()) {
+        it.titlecase(Locale.getDefault())
+    } else {
+        it.toString()
+    }
+}

@@ -5,7 +5,9 @@ import br.dev.geanbrandao.howtodo.newpokedex.common.getTypeModel
 import br.dev.geanbrandao.howtodo.newpokedex.common.toFormattedString
 import br.dev.geanbrandao.howtodo.newpokedex.data.remote.models.PokemonResponse
 import br.dev.geanbrandao.howtodo.newpokedex.domain.repository.PokemonRepository
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.HomeUiState.Companion.PAGE_SIZE
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Factory
 
@@ -14,11 +16,10 @@ class GetPokemonListUseCase(
     private val repository: PokemonRepository,
 ) {
 
-    suspend operator fun invoke(currentPage: Int) = flow<PokemonModel> {
-        val pokemonResponse = repository.getPokemonList(currentPage)
-
-        pokemonResponse.list.map {
-            val poke = repository.getPokemon(it.url).convertToModel()
+    operator fun invoke(currentPage: Int): Flow<PokemonModel> = flow {
+        val initial = (currentPage - 1) * PAGE_SIZE
+        (initial..initial + 50).forEach { id: Int ->
+            val poke = repository.getPokemon(id+1).convertToModel()
             emit(poke)
         }
     }

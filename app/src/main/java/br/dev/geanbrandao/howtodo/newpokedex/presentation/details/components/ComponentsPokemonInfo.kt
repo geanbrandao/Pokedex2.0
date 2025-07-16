@@ -6,28 +6,39 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Divider
+import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import br.dev.geanbrandao.howtodo.newpokedex.R
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.PokemonName
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.common.PokemonNumberName
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import br.dev.geanbrandao.howtodo.newpokedex.common.capitalize
+import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PokemonDetailsPreviewProvider
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.evolutions.EvolutionChainScreen
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.Bulbasaur
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.PokemonTypesView
-import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonDetailsModel
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.PokemonType
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.Feature
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonV2Details
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.AppTheme
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.Black
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.IconTypeLargeSize
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingFour
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingHalf
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingOne
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingThree
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingTwo
-import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.TextBodyLarge
-import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.TextTitleExtraLarge
 
 @Composable
 fun PokemonDetailsInfo(
     modifier: Modifier = Modifier,
-    pokemon: PokemonDetailsModel,
+    pokemon: PokemonV2Details,
 ) {
     PokemonDetailsInfoView(modifier = modifier, item = pokemon)
 }
@@ -35,104 +46,186 @@ fun PokemonDetailsInfo(
 @Composable
 private fun PokemonDetailsInfoView(
     modifier: Modifier = Modifier,
-    item: PokemonDetailsModel = Bulbasaur
+    item: PokemonV2Details,
 ) {
     Column(
         modifier = modifier
             .padding(horizontal = PaddingTwo)
     ) {
-        PokemonName(
-            text = item.pokemon.name,
-            fontSize = TextTitleExtraLarge,
-        )
-        PokemonNumberName(
-            text = item.pokemon.numberName,
-            fontSize = TextBodyLarge,
-        )
-        Spacer(modifier = Modifier.size(PaddingTwo))
-        PokemonTypesView(
-            typeOne = item.pokemon.typeOne,
-            typeTwo = item.pokemon.typeTwo,
-            isLarge = true
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = PaddingThree),
-            color = Black.copy(alpha = 0.05f)
-        )
+        PokemonBasicInfo(item = item)
+
         PokemonFeaturesView(item = item)
+
         Spacer(modifier = Modifier.size(size = PaddingThree))
         GenderInfo(genderRate = item.genderRate)
+
         Spacer(modifier = Modifier.size(size = PaddingFour))
 //        PokemonWeakness(list = getPokemonWeakness(typeOne = item.pokemon.typeOne, typeTwo = item.pokemon.typeTwo))
         PokemonStats(stats = item.pokemon.stats, modifier = Modifier.fillMaxWidth())
-        Spacer(modifier = Modifier.size(size = PaddingFour))
+
+        Spacer(Modifier.size(size = PaddingFour))
         EvolutionChainScreen(
-            chainUrl = item.evolutionUrl,
-            modifier = Modifier.fillMaxWidth().padding(bottom = PaddingFour),
+            evolutions = item.evolutions,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = PaddingFour),
         )
     }
 }
 
 @Composable
-private fun PokemonFeaturesView(
-    item: PokemonDetailsModel = Bulbasaur
-) {
-    val weight = buildString {
-        append(item.pokemon.weight)
-        append(" kg")
+private fun PokemonBasicInfo(item: PokemonV2Details) {
+    Text(
+        text = item.pokemon.name.capitalize(),
+        style = MaterialTheme.typography.titleLarge,
+    )
+    Text(
+        text = item.pokemon.numberFormatted,
+        style = MaterialTheme.typography.titleLarge,
+    )
+    Spacer(modifier = Modifier.size(PaddingTwo))
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        PokemonType(
+            type = item.pokemon.typeOne,
+            iconSize = IconTypeLargeSize,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        item.pokemon.typeTwo?.let {
+            Spacer(modifier = Modifier.size(PaddingOne))
+            PokemonType(
+                type = it,
+                iconSize = IconTypeLargeSize,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
     }
-    val height = buildString {
-        append(item.pokemon.height)
-        append(" m")
-    }
+    HorizontalDivider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = PaddingThree),
+        color = Black.copy(alpha = 0.05f)
+    )
+}
 
+@Composable
+private fun PokemonFeaturesView(
+    item: PokemonV2Details
+) {
     Column(Modifier.fillMaxWidth()) {
         Row {
             PokemonFeature(
-                iconId = R.drawable.ic_weight,
-                labelTextId = R.string.pokemon_feature_label_weight,
-                infoText = weight,
+                item = Feature.weight.copy(infoText = item.pokemon.weightFormatted),
                 modifier = Modifier.weight(weight = 1f),
             )
             Spacer(modifier = Modifier.size(size = PaddingThree))
             PokemonFeature(
-                iconId = R.drawable.ic_height,
-                labelTextId = R.string.pokemon_feature_label_height,
-                infoText = height,
+                item = Feature.height.copy(infoText = item.pokemon.heightFormatted),
                 modifier = Modifier.weight(weight = 1f),
             )
         }
         Spacer(modifier = Modifier.size(size = PaddingTwo))
         Row {
             PokemonFeature(
-                iconId = R.drawable.ic_category,
-                labelTextId = R.string.pokemon_feature_label_generation,
-                infoText = item.generation,
+                item = Feature.generation.copy(infoText = item.pokemon.generationFormatted),
                 modifier = Modifier.weight(weight = 1f),
             )
             Spacer(modifier = Modifier.size(size = PaddingThree))
             PokemonFeature(
-                iconId = R.drawable.ic_pokeball,
-                labelTextId = R.string.pokemon_feature_label_ability,
-                infoText = item.pokemon.abilities.firstOrNull().orEmpty(),
+                item = Feature.ability.copy(infoText = item.pokemon.abilities.firstOrNull().orEmpty()),
                 modifier = Modifier.weight(weight = 1f),
             )
         }
     }
 }
 
-
-
-@Preview(showBackground = true)
 @Composable
-fun PokemonFeaturesPreview() {
-    PokemonFeaturesView()
+fun PokemonFeature(
+    item: Feature,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                painter = painterResource(id = item.iconId),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground,
+            )
+            Spacer(modifier = Modifier.size(PaddingOne))
+            Text(
+                text = stringResource(id = item.labelTextId),
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
+        Spacer(modifier = Modifier.size(size = PaddingHalf))
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+
+        ) {
+            Text(
+                text = item.infoText.capitalize(),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = PaddingOne),
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .border(
+//                        shape = RoundedCornerShape(15.dp),
+//                        width = 1.dp,
+//                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
+//                    )
+//                    .padding(all = PaddingOne),
+            )
+
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PokemonDetailsInfoPreview() {
-    PokemonDetailsInfoView()
+fun PokemonFeaturePreview(
+    @PreviewParameter(PokemonFeaturePreviewProvider::class) item: Feature,
+) {
+    AppTheme {
+        PokemonFeature(item)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PokemonFeaturesPreview(
+    @PreviewParameter(PokemonDetailsPreviewProvider::class) item: PokemonV2Details
+) {
+    AppTheme {
+        PokemonFeaturesView(item)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PokemonBasicInfoPreview(
+    @PreviewParameter(PokemonDetailsPreviewProvider::class) item: PokemonV2Details
+) {
+    AppTheme {
+        PokemonBasicInfo(item = item)
+    }
+}
+
+class PokemonFeaturePreviewProvider: PreviewParameterProvider<Feature> {
+    override val values: Sequence<Feature>
+        get() = sequenceOf(
+            Feature.weight.copy(infoText = "6.9 kg"),
+            Feature.height.copy(infoText = "17.7 cm"),
+            Feature.generation.copy(infoText = "I"),
+            Feature.ability.copy(infoText = "Overgrow"),
+        )
 }
