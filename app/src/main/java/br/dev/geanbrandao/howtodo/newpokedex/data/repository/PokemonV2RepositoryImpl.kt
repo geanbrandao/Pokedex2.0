@@ -93,6 +93,14 @@ class PokemonV2RepositoryImpl(
         }
     }
 
+    override suspend fun updateFavorite(id: Int, isFavorite: Boolean): Flow<PokemonV2> = flow {
+        dao.updateIsFavorite(id = id, isFavorite = isFavorite)
+       emit(getPokemonById(id))
+    }
+
+    override suspend fun getPokemonByIdIsFavorite(id: Int): Boolean =
+        dao.getIsFavoriteById(id)
+
     private suspend fun fetchAndCachePokemonDetails(id: Int): PokemonV2Details {
         val responseDetails: PokemonV2DetailsResponse = client.get {
             url(POKE_SPECIE.plus(id))

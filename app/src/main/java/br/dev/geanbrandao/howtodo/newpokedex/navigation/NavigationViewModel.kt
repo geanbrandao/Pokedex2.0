@@ -32,7 +32,19 @@ class NavigationViewModel(
     }
 
     fun navigateTo(screen: NavKey) {
+        val lastScreen = backStack.value.lastOrNull()
+        if (screen is Details && lastScreen is Details) {
+            state[KEY] = backStack.value.dropLast(1)
+        }
         state[KEY] = backStack.value + screen
+    }
+
+    fun navigateTo2(screen: NavKey) {
+        val lastScreen = backStack.value.lastOrNull()
+        val current = if (screen is Details && lastScreen is Details) {
+            backStack.value.dropLast(1)
+        } else backStack.value
+        state[KEY] = current + screen
     }
 
     fun navigateBack(n: Int = 1) {

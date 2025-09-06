@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,12 +21,13 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import br.dev.geanbrandao.howtodo.newpokedex.common.capitalize
 import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PokemonDetailsPreviewProvider
+import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PokemonPreviewProvider
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.evolutions.EvolutionChainScreen
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.PokemonType
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.Feature
+import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonV2
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonV2Details
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.AppTheme
-import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.Black
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.IconTypeLargeSize
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingFour
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingHalf
@@ -52,7 +52,6 @@ private fun PokemonDetailsInfoView(
         modifier = modifier
             .padding(horizontal = PaddingTwo)
     ) {
-        PokemonBasicInfo(item = item)
 
         PokemonFeaturesView(item = item)
 
@@ -74,13 +73,13 @@ private fun PokemonDetailsInfoView(
 }
 
 @Composable
-private fun PokemonBasicInfo(item: PokemonV2Details) {
+fun PokemonBasicInfo(pokemon: PokemonV2) {
     Text(
-        text = item.pokemon.name.capitalize(),
+        text = pokemon.name.capitalize(),
         style = MaterialTheme.typography.titleLarge,
     )
     Text(
-        text = item.pokemon.numberFormatted,
+        text = pokemon.numberFormatted,
         style = MaterialTheme.typography.titleLarge,
     )
     Spacer(modifier = Modifier.size(PaddingTwo))
@@ -89,11 +88,11 @@ private fun PokemonBasicInfo(item: PokemonV2Details) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PokemonType(
-            type = item.pokemon.typeOne,
+            type = pokemon.typeOne,
             iconSize = IconTypeLargeSize,
             style = MaterialTheme.typography.bodyLarge,
         )
-        item.pokemon.typeTwo?.let {
+        pokemon.typeTwo?.let {
             Spacer(modifier = Modifier.size(PaddingOne))
             PokemonType(
                 type = it,
@@ -102,12 +101,6 @@ private fun PokemonBasicInfo(item: PokemonV2Details) {
             )
         }
     }
-    HorizontalDivider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = PaddingThree),
-        color = Black.copy(alpha = 0.05f)
-    )
 }
 
 @Composable
@@ -213,10 +206,10 @@ fun PokemonFeaturesPreview(
 @Preview(showBackground = true)
 @Composable
 private fun PokemonBasicInfoPreview(
-    @PreviewParameter(PokemonDetailsPreviewProvider::class) item: PokemonV2Details
+    @PreviewParameter(PokemonPreviewProvider::class) item: PokemonV2
 ) {
     AppTheme {
-        PokemonBasicInfo(item = item)
+        PokemonBasicInfo(pokemon = item)
     }
 }
 

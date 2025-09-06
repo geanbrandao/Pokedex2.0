@@ -21,6 +21,7 @@ import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingTwo
 fun PokemonCard(
     item: PokemonV2,
     modifier: Modifier = Modifier,
+    onHeartClicked: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -36,7 +37,11 @@ fun PokemonCard(
             modifier = Modifier.padding(top = PaddingTwo, bottom = PaddingTwo)
         )
         Spacer(modifier = Modifier.size(size = PaddingTwo).weight(weight = 1f))
-        PokeView(type = item.typeOne, pokeUrl = item.imgUrlNormal)
+        PokeView(
+            type = item.typeOne,
+            pokeUrl = item.imgUrlNormal,
+            isFavorite = item.isFavorite,
+            onHeartClicked = onHeartClicked)
     }
 }
 
@@ -46,6 +51,6 @@ fun PokemonItemPreview(
     @PreviewParameter(PokemonPreviewProvider::class) item: PokemonV2,
 ) {
     AppTheme {
-        PokemonCard(item = item)
+        PokemonCard(item = item, onHeartClicked = {})
     }
 }

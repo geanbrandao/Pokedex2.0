@@ -198,3 +198,5 @@ fun String.capitalize() = this.replaceFirstChar {
         it.toString()
     }
 }
+
+fun Boolean?.orFalse() = this ?: false

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
@@ -34,23 +32,16 @@ import coil.compose.AsyncImage
 
 @Composable
 fun PokeView(
+    modifier: Modifier = Modifier,
     type: PokemonTypeModel,
     pokeUrl: String,
-    modifier: Modifier = Modifier,
-) {
-    Poke(modifier = modifier, type = type, pokeUrl = pokeUrl)
-}
-
-@Composable
-private fun Poke(
-    modifier: Modifier = Modifier,
-    type: PokemonTypeModel = PokemonTypeModel.Grass,
-    pokeUrl: String = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+    isFavorite: Boolean,
+    onHeartClicked: () -> Unit,
 ) {
 
-    val isFav = remember { mutableStateOf(false) }
+//    animateValueAsState()
 
-    val (favIconId, favIconContentDescription) = if (isFav.value) {
+    val (favIconId, favIconContentDescription) = if (isFavorite) {
         Pair(
             R.drawable.ic_heart_fill,
             R.string.content_description_icon_add_favorite,
@@ -116,7 +107,7 @@ private fun Poke(
                 contentDescription = stringResource(id = favIconContentDescription),
                 tint = Color.Unspecified,
                 modifier = Modifier
-                    .clickableNoRippleEffect { isFav.value = isFav.value.not() }
+                    .clickableNoRippleEffect { onHeartClicked() }
                     .constrainAs(favRef) {
                     end.linkTo(parent.end)
                     top.linkTo(parent.top)
@@ -187,5 +178,10 @@ fun debugPlaceholder(@DrawableRes debugPreview: Int) =
 @Preview(showBackground = true)
 @Composable
 private fun PokePreview() {
-    Poke()
+    PokeView(
+        type = PokemonTypeModel.Grass,
+        pokeUrl = "",
+        isFavorite = false,
+        onHeartClicked = {},
+    )
 }

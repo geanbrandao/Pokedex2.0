@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -49,16 +51,33 @@ fun PokemonListScreenV2(
         navigateToDetails = { id: Int ->
             viewModel.openDetails(id)
         },
+        onHeartClicked = { id: Int, isFavorite: Boolean ->
+            viewModel.onHeartClicked(id, isFavorite)
+        },
+        onLoadMore = viewModel::onLoadMore
     )
-
 }
 
 @Composable
 private fun PokemonListView(
     uiState: HomeUiState,
     navigateToDetails: (Int) -> Unit,
+    onHeartClicked: (Int, Boolean) -> Unit,
+    onLoadMore: () -> Unit,
 ) {
     val listState = rememberLazyListState()
+
+    val shouldLoadMore = remember {
+        derivedStateOf {
+            val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+            val totalItems = listState.layoutInfo.totalItemsCount
+            lastVisible != null && lastVisible >= totalItems - 1
+        }
+    }
+
+    LaunchedEffect(shouldLoadMore.value) {
+        if (shouldLoadMore.value) onLoadMore()
+    }
 
     LazyColumn(
         contentPadding = PaddingValues(all = PaddingOne),
@@ -74,7 +93,8 @@ private fun PokemonListView(
                     .padding(bottom = PaddingTwo)
                     .clickableNoRippleEffect {
                         navigateToDetails(item.id)
-                    }
+                    },
+                onHeartClicked = { onHeartClicked(item.id, item.isFavorite) },
             )
         }
         if (uiState.isLoading) {
@@ -95,6 +115,8 @@ private fun PokemonListPreview(
         PokemonListView(
             uiState = uiState,
             navigateToDetails = {},
+            onHeartClicked = { _, _ -> },
+            onLoadMore = {}
         )
     }
 }

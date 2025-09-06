@@ -10,4 +10,6 @@ interface PokemonV2Repository {
     suspend fun getPokemonByName(name: String): Flow<PokemonV2>
     suspend fun getPokemonDetailsById(id: Int): Flow<PokemonV2Details>
     suspend fun getEvolutions(list: List<Int>): Flow<PokemonV2>
+    suspend fun updateFavorite(id: Int, isFavorite: Boolean): Flow<PokemonV2>
+    suspend fun getPokemonByIdIsFavorite(id: Int): Boolean
 }

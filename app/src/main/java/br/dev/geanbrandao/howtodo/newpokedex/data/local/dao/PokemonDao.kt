@@ -59,6 +59,12 @@ interface PokemonDao {
     @Query("SELECT * FROM pokemon_details WHERE id = :id")
     suspend fun getPokemonDetailsById(id: Int): PokemonDetailsEntity?
 
+    @Query("UPDATE pokemon SET isFavorite = :isFavorite WHERE id = :id")
+    suspend fun updateIsFavorite(id: Int, isFavorite: Boolean)
+
+    @Query("SELECT isFavorite from pokemon WHERE id = :id")
+    suspend fun getIsFavoriteById(id: Int): Boolean
+
     /**
      * Retrieves all Pokemons whose 'updatedAt' timestamp is older than 7 days.
      * SQLite's STRFTIME function is used for date comparison.

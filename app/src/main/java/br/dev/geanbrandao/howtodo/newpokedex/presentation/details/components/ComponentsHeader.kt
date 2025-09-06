@@ -4,12 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,15 +32,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import br.dev.geanbrandao.howtodo.newpokedex.R
+import br.dev.geanbrandao.howtodo.newpokedex.common.capitalize
 import br.dev.geanbrandao.howtodo.newpokedex.common.clickableNoRippleEffect
 import br.dev.geanbrandao.howtodo.newpokedex.common.gradient45
-import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PokemonDetailsPreviewProvider
+import br.dev.geanbrandao.howtodo.newpokedex.common.preview.PokemonPreviewProvider
 import br.dev.geanbrandao.howtodo.newpokedex.common.toColor
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.home.components.debugPlaceholder
 import br.dev.geanbrandao.howtodo.newpokedex.presentation.models.PokemonV2
+import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.AppTheme
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.DetailsPokeSize
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.DragonColor
 import br.dev.geanbrandao.howtodo.newpokedex.ui.theme.PaddingOne
@@ -43,11 +52,82 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+//@Composable
+//fun HeaderView(
+//    pokemon: PokemonV2,
+//) {
+//    HeaderV2(pokemon = pokemon)
+//}
+
 @Composable
-fun HeaderView(
-    pokemon: PokemonV2
+fun HeaderV2(
+    modifier: Modifier = Modifier,
+    pokemon: PokemonV2,
+    onBackPressed: () -> Unit,
 ) {
-    Header(pokemon = pokemon)
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(pokemon.typeOne.color.toColor())
+            .padding(all = PaddingTwo)
+    ) {
+//        Column(
+//            modifier = Modifier.align(alignment = Alignment.CenterStart)
+//        ) {
+//            Text(
+//                text = pokemon.name.capitalize(),
+//                style = MaterialTheme.typography.titleLarge,
+//            )
+//            Text(
+//                text = pokemon.numberFormatted,
+//                style = MaterialTheme.typography.titleMedium,
+//            )
+//        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.align(Alignment.CenterStart)
+        ) {
+            IconButton(
+                onClick = onBackPressed) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                    contentDescription = null,
+                )
+            }
+            Text(
+                text = pokemon.name.capitalize(),
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
+        Box(
+            modifier = Modifier.align(Alignment.CenterEnd)
+        ) {
+            Icon(
+                painter = painterResource(pokemon.typeOne.icon),
+                contentDescription = null,
+                modifier = Modifier
+                    .graphicsLayer(alpha = 0.99f)
+                    .drawWithCache {
+                        onDrawWithContent {
+                            drawContent()
+                            drawRect(
+                                brush = pokemon.typeOne.color.toColor().gradient45,
+                                blendMode = BlendMode.SrcAtop
+                            )
+                        }
+                    }
+                    .size(50.dp)
+                    .align(alignment = Alignment.Center)
+            )
+            PokemonSprite(
+                pokemon = pokemon,
+                size = 40.dp,
+                modifier = Modifier.align(alignment = Alignment.Center)
+            )
+        }
+    }
+    
 }
 
 @Composable
@@ -93,7 +173,7 @@ private fun Header(
                 }
         )
         PokemonSprite(
-            Modifier
+            modifier = Modifier
                 .constrainAs(imgRef) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -101,6 +181,7 @@ private fun Header(
                     bottom.linkTo(guidelineReference)
                 },
             pokemon = pokemon,
+            size = DetailsPokeSize,
         )
     }
 }
@@ -150,9 +231,10 @@ fun TopHeaderView(
 
 
 @Composable
-private fun PokemonSprite(
+fun PokemonSprite(
     modifier: Modifier = Modifier,
     pokemon: PokemonV2,
+    size: Dp,
 ) {
 
     val currentImgUrl = remember {
@@ -167,7 +249,7 @@ private fun PokemonSprite(
         contentDescription = null,
         contentScale = ContentScale.Fit,
         modifier = modifier
-            .size(DetailsPokeSize)
+            .size(size = size)
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
@@ -185,9 +267,14 @@ private fun PokemonSprite(
 @Preview(showBackground = true)
 @Composable
 private fun HeaderPreview(
-    @PreviewParameter(PokemonDetailsPreviewProvider::class) item: PokemonV2
+    @PreviewParameter(PokemonPreviewProvider::class) item: PokemonV2
 ) {
-    Header(pokemon = item)
+    AppTheme {
+        Column {
+//            HeaderV2(pokemon = item, onBackPressed = {})
+            Header(pokemon = item)
+        }
+    }
 }
 
 @Preview
